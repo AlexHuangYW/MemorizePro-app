@@ -9,10 +9,7 @@ import { FIREBASE_AUTH } from './firebase';
 import { User } from 'firebase/auth';
 import AppStack from './navigation/AppStack';
 import messaging from '@react-native-firebase/messaging';
-import { getTodos } from './api/todo';
 import {
-  useQuery,
-  useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
@@ -32,11 +29,7 @@ function App() {
     console.log('Authorization status:', authStatus);
   }
   const token = await messaging().getToken();
-  console.log({token})
-
   }
-
-  
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -44,9 +37,7 @@ function App() {
     });
     // push notification
     getToken();
-
-    //console.log(todosQuery.isLoading)
-
+    
 
   }, []);
 
@@ -54,7 +45,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <ReduxProvider store={store}>
-          {user? <AppStack />  : <AuthStack />}
+          {/* {user? <AppStack />  : <AuthStack />} */}
+          <AppStack />
         </ReduxProvider>
       </QueryClientProvider>
     </ThemeProvider>

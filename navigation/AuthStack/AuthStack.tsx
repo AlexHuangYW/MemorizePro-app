@@ -13,21 +13,13 @@ import { getTodos } from '../../api/todo';
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
-  const todosQuery = useQuery({
-    queryKey: ['todos'],
-    queryFn: getTodos,
-  });
   
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-    
-      
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
-        {/* <Stack.Screen name="Main" component={TabNavigator} /> */}
-    
       </Stack.Navigator>
     </NavigationContainer>
   );

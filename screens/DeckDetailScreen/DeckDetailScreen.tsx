@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View, Alert, FlatList, Button} from 'react-native';
-//import { useHeaderHeight } from '@react-navigation/stack';
-// import colors from '../misc/colors';
-// import RoundIconBtn from './RoundIconBtn';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { useNotes } from '../contexts/NoteProvider';
-// import NoteInputModal from './NoteInputModal';
 import { createBox, createText } from "@shopify/restyle";
 import { ThemeProps } from "../../theme";
 

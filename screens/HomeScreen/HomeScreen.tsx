@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   SafeAreaView,
@@ -20,10 +20,21 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { IDeck } from '../../interface/deck';
 import { isEmpty } from 'lodash';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import GetLocation from 'react-native-get-location';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import { getAddressFromCoordinates } from '../../api/location';
 
 export type HomeScreenProps = {
   navigation: NativeStackNavigationProp<any,any>
 };
+type AddressResult = {
+  TimeZoneId: string;
+  GMT_offset: number;
+  TimeZoneName: string;
+  LocalTime_Now: string;
+  Country: string;
+  CountryId: string;
+}
 
 const Box = createBox<ThemeProps>();
 const Text = createText<ThemeProps>();
@@ -31,6 +42,9 @@ const Text = createText<ThemeProps>();
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [decks, setDecks] = useState<IDeck[] | undefined>();
+  const [latitude, setLatitude] = useState<number>();
+  const [longitude, setLongitude] = useState<number>();
+  const [address, setAddress]= useState<AddressResult>();
 
   const reduxDeck = useAppSelector((state: AppState) => state.decks);
   const dispatch = useAppDispatch();
@@ -47,9 +61,48 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     navigation.navigate('DeckDetail', {deck} );
   };
 
-  useEffect(()=> {
-    setDecks(reduxDeck.decks) 
-  }, [reduxDeck]);
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const location = await GetLocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 60000,
+        });
+  
+        setLatitude(location.latitude);
+        setLongitude(location.longitude);
+  
+        const result: AddressResult = await getAddressFromCoordinates({ latitude, longitude });
+   
+        setAddress(result);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchLocation();
+    setDecks(reduxDeck.decks);
+  
+  }, [reduxDeck, latitude, longitude]);
+  
+
+  useEffect(() => {
+    if (address && address.TimeZoneId) {
+      console.log("why", address);
+      navigation.setOptions({
+        headerRight: () => (
+          <Box flexDirection='row'>
+            <EntypoIcon name='location-pin' size={20} />
+            <Text variant='body'>{address?.TimeZoneId}</Text>
+          </Box>
+        ),
+      });
+    }
+  }, [address, navigation]);
+
+
+
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>

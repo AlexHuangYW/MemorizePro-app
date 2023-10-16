@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import ProfileScreen from '../../screens/ProfileScreen';
 import HomeScreen from '../../screens/HomeScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import TodoScreen from '../../screens/TodoScreen';
 
 export type HomeStackProps = {
 
@@ -38,6 +39,10 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
+      />
+      <Tab.Screen
+        name="Todo"
+        component={TodoScreen}
       />
       <Tab.Screen
         name="Profile"
